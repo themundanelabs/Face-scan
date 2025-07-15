@@ -4,15 +4,15 @@ import logging
 import time
 from datetime import datetime
 
-from ..models.analysis import (
+from models.analysis import (
     FaceAnalysisRequest, 
     FaceAnalysisResponse, 
     ColorAnalysis, 
     AnalysisMetadata,
     AnalysisRecord
 )
-from ..services.face_analyzer import FaceAnalyzer
-from ..server import db
+from services.face_analyzer import FaceAnalyzer
+from server import db
 
 logger = logging.getLogger(__name__)
 
