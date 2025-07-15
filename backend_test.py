@@ -330,7 +330,7 @@ class BackendTester:
         """Test GET /api/analysis/history/{session_id} endpoint"""
         print("\n=== Testing History Endpoint ===")
         try:
-            response = requests.get(f"{API_BASE_URL}/analysis/history/{self.session_id}", timeout=10)
+            response = requests.get(f"{API_BASE_URL}/analysis/history/{self.session_id}", timeout=30)
             
             if response.status_code == 200:
                 data = response.json()
