@@ -40,10 +40,10 @@ const ColorResults = ({ results, onReset }) => {
 
   const downloadPalette = () => {
     const paletteData = {
-      skinTone: results.skinTone,
-      eyeColor: results.eyeColor,
-      lipColor: results.lipColor,
-      hairColor: results.hairColor,
+      skinTone: results.skin_tone,
+      eyeColor: results.eye_color,
+      lipColor: results.lip_color,
+      hairColor: results.hair_color,
       generatedAt: new Date().toISOString()
     };
     
@@ -147,7 +147,7 @@ const ColorResults = ({ results, onReset }) => {
             Your Color Palette
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Here are your personalized HEX color codes extracted from your facial features. 
+            Here are your personalized HEX color codes extracted from your facial features using AI-powered analysis. 
             Click any color to copy it to your clipboard.
           </p>
         </div>
@@ -156,25 +156,25 @@ const ColorResults = ({ results, onReset }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           <ColorCard
             label="Skin Tone"
-            color={results.skinTone}
+            color={results.skin_tone}
             icon="🏽"
-            description="Dominant skin color from cheek area"
+            description="Dominant skin color from facial analysis"
           />
           <ColorCard
             label="Eye Color"
-            color={results.eyeColor}
+            color={results.eye_color}
             icon="👁️"
             description="Dominant iris color"
           />
           <ColorCard
             label="Lip Color"
-            color={results.lipColor}
+            color={results.lip_color}
             icon="💋"
             description="Natural lip color"
           />
           <ColorCard
             label="Hair Color"
-            color={results.hairColor}
+            color={results.hair_color}
             icon="💇"
             description="Dominant hair color"
           />
@@ -188,10 +188,10 @@ const ColorResults = ({ results, onReset }) => {
           <CardContent>
             <div className="flex flex-wrap justify-center gap-4 mb-6">
               {[
-                { color: results.skinTone, label: "Skin" },
-                { color: results.eyeColor, label: "Eyes" },
-                { color: results.lipColor, label: "Lips" },
-                { color: results.hairColor, label: "Hair" }
+                { color: results.skin_tone, label: "Skin" },
+                { color: results.eye_color, label: "Eyes" },
+                { color: results.lip_color, label: "Lips" },
+                { color: results.hair_color, label: "Hair" }
               ].map((item, index) => (
                 <div key={index} className="text-center">
                   <div 
@@ -210,14 +210,15 @@ const ColorResults = ({ results, onReset }) => {
             <div className="text-center space-y-4">
               <p className="text-gray-600">
                 Your unique color palette has been generated using advanced facial recognition 
-                and color analysis algorithms. These colors represent your natural features 
+                with MediaPipe and K-means clustering algorithms. These colors represent your natural features 
                 and can be used for makeup matching, fashion coordination, or design inspiration.
               </p>
               
               <div className="flex justify-center gap-4 flex-wrap">
-                <Badge variant="secondary">Privacy Protected</Badge>
                 <Badge variant="secondary">AI-Powered Analysis</Badge>
+                <Badge variant="secondary">MediaPipe + K-means</Badge>
                 <Badge variant="secondary">Precise HEX Colors</Badge>
+                <Badge variant="secondary">Privacy Protected</Badge>
               </div>
             </div>
           </CardContent>
