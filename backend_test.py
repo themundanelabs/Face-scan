@@ -384,7 +384,6 @@ class BackendTester:
         if error_handling_passed:
             self.results['error_handling']['passed'] = True
         
-        # Test stats endpoint
         self.test_stats_endpoint()
         
         # Test history endpoint
