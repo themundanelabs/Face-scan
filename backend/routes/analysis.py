@@ -5,6 +5,12 @@ import time
 from datetime import datetime
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables
+ROOT_DIR = Path(__file__).parent.parent
+load_dotenv(ROOT_DIR / '.env')
 
 from models.analysis import (
     FaceAnalysisRequest, 
