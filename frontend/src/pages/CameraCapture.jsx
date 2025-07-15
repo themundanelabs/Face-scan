@@ -8,7 +8,10 @@ import { Camera, ArrowLeft, RotateCcw, Check, Palette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import FaceOverlay from "@/components/FaceOverlay";
 import ColorResults from "@/components/ColorResults";
-import { mockColorAnalysis } from "@/utils/mockData";
+import axios from "axios";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const CameraCapture = () => {
   const navigate = useNavigate();
@@ -23,6 +26,7 @@ const CameraCapture = () => {
   const [colorResults, setColorResults] = useState(null);
   const [faceDetected, setFaceDetected] = useState(false);
   const [cameraError, setCameraError] = useState(null);
+  const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
 
   const steps = [
     {
@@ -125,18 +129,39 @@ const CameraCapture = () => {
   const analyzeImages = async (images) => {
     setIsAnalyzing(true);
     
-    // Simulate analysis with mock data
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    const results = mockColorAnalysis();
-    setColorResults(results);
-    setIsAnalyzing(false);
-    setAnalysisComplete(true);
-    
-    toast({
-      title: "Analysis Complete!",
-      description: "Your facial feature colors have been extracted.",
-    });
+    try {
+      toast({
+        title: "Analyzing Images...",
+        description: "Processing your facial features with AI",
+      });
+
+      const response = await axios.post(`${API}/analysis/analyze-face`, {
+        images: images,
+        session_id: sessionId
+      });
+
+      if (response.data.success) {
+        setColorResults(response.data.colors);
+        setAnalysisComplete(true);
+        
+        toast({
+          title: "Analysis Complete!",
+          description: "Your facial feature colors have been extracted.",
+        });
+      } else {
+        throw new Error(response.data.error || "Analysis failed");
+      }
+
+    } catch (error) {
+      console.error("Analysis error:", error);
+      toast({
+        title: "Analysis Failed",
+        description: error.response?.data?.error || error.message || "Unable to analyze images. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   const resetCapture = () => {
@@ -239,12 +264,20 @@ const CameraCapture = () => {
                 disabled={!faceDetected || isAnalyzing}
                 className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 px-8 rounded-xl"
               >
-                {isAnalyzing ? "Analyzing..." : "Capture Photo"}
+                {isAnalyzing ? (
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Analyzing...
+                  </div>
+                ) : (
+                  "Capture Photo"
+                )}
               </Button>
               <Button
                 onClick={resetCapture}
                 variant="outline"
                 className="py-3 px-8 rounded-xl"
+                disabled={isAnalyzing}
               >
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Reset
@@ -310,6 +343,26 @@ const CameraCapture = () => {
                         <Check className="h-4 w-4 text-green-500" />
                       </div>
                     ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Analysis Status */}
+            {isAnalyzing && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">AI Analysis</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-500"></div>
+                      <span className="text-sm">Processing facial features...</span>
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Using MediaPipe + K-means clustering
+                    </div>
                   </div>
                 </CardContent>
               </Card>
