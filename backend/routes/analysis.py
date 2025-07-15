@@ -3,6 +3,8 @@ from typing import Dict, Any
 import logging
 import time
 from datetime import datetime
+from motor.motor_asyncio import AsyncIOMotorClient
+import os
 
 from models.analysis import (
     FaceAnalysisRequest, 
@@ -12,7 +14,11 @@ from models.analysis import (
     AnalysisRecord
 )
 from services.face_analyzer import FaceAnalyzer
-from server import db
+
+# MongoDB connection
+mongo_url = os.environ['MONGO_URL']
+client = AsyncIOMotorClient(mongo_url)
+db = client[os.environ['DB_NAME']]
 
 logger = logging.getLogger(__name__)
 
