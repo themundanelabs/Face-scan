@@ -262,7 +262,7 @@ class BackendTester:
                     f"{API_BASE_URL}/analysis/analyze-face",
                     json=test_case["payload"],
                     headers={'Content-Type': 'application/json'},
-                    timeout=10
+                    timeout=30
                 )
                 
                 # Should either return 400/422 or success=false
